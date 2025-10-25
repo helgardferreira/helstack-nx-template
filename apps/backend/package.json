@@ -1,0 +1,214 @@
+{
+  "name": "@helstack-nx-template/backend",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "@faker-js/faker": "*",
+    "@helstack-nx-template/schemas": "workspace:*",
+    "@mikro-orm/better-sqlite": "*",
+    "@mikro-orm/core": "*",
+    "@mikro-orm/nestjs": "*",
+    "@mikro-orm/seeder": "*",
+    "@mikro-orm/sql-highlighter": "*",
+    "@nestjs/common": "*",
+    "@nestjs/config": "*",
+    "@nestjs/core": "*",
+    "express": "*",
+    "lodash": "*",
+    "rxjs": "*",
+    "uuid": "*",
+    "zod": "*"
+  },
+  "nx": {
+    "name": "backend",
+    "projectType": "application",
+    "sourceRoot": "apps/backend/src",
+    "targets": {
+      "build": {
+        "configurations": {
+          "development": {
+            "tsConfig": "{projectRoot}/tsconfig.app.json"
+          },
+          "production": {
+            "tsConfig": "{projectRoot}/tsconfig.prod.json"
+          }
+        },
+        "defaultConfiguration": "production",
+        "dependsOn": [
+          "^build",
+          "typecheck"
+        ],
+        "executor": "@nx/js:tsc",
+        "options": {
+          "assets": [
+            "{projectRoot}/src/assets"
+          ],
+          "main": "{projectRoot}/src/main.ts",
+          "outputPath": "{projectRoot}/dist"
+        },
+        "outputs": [
+          "{options.outputPath}"
+        ]
+      },
+      "build-deps": {
+        "configurations": {},
+        "dependsOn": [
+          "^build"
+        ],
+        "executor": "nx:noop",
+        "options": {},
+        "parallelism": true
+      },
+      "lint": {
+        "cache": true,
+        "configurations": {},
+        "executor": "nx:run-commands",
+        "inputs": [
+          "default",
+          "^default",
+          "{workspaceRoot}/eslint.config.mjs",
+          "{workspaceRoot}/apps/backend/eslint.config.mjs",
+          "{workspaceRoot}/tools/eslint-rules/**/*",
+          {
+            "externalDependencies": [
+              "eslint"
+            ]
+          }
+        ],
+        "metadata": {
+          "description": "Runs ESLint on project",
+          "help": {
+            "command": "pnpm exec eslint --help",
+            "example": {
+              "options": {
+                "max-warnings": 0
+              }
+            }
+          }
+        },
+        "options": {
+          "command": "eslint .",
+          "cwd": "apps/backend"
+        },
+        "outputs": [
+          "{options.outputFile}"
+        ],
+        "parallelism": true
+      },
+      "dev": {
+        "configurations": {
+          "development": {
+            "buildTarget": "backend:build:development"
+          },
+          "production": {
+            "buildTarget": "backend:build:production"
+          }
+        },
+        "continuous": true,
+        "defaultConfiguration": "development",
+        "dependsOn": [
+          "^build",
+          "typecheck"
+        ],
+        "executor": "@nx/js:node"
+      },
+      "test": {
+        "cache": true,
+        "configurations": {},
+        "dependsOn": [
+          "^build"
+        ],
+        "executor": "nx:run-commands",
+        "inputs": [
+          "default",
+          "^production",
+          {
+            "externalDependencies": [
+              "vitest"
+            ]
+          },
+          {
+            "env": "CI"
+          }
+        ],
+        "metadata": {
+          "description": "Run Vite tests",
+          "help": {
+            "command": "pnpm exec vitest --help",
+            "example": {
+              "options": {
+                "bail": 1,
+                "coverage": true
+              }
+            }
+          }
+        },
+        "options": {
+          "command": "vitest",
+          "cwd": "apps/backend",
+          "passWithNoTests": true
+        },
+        "outputs": [
+          "{projectRoot}/test-output/vitest/coverage"
+        ],
+        "parallelism": true
+      },
+      "typecheck": {
+        "cache": true,
+        "configurations": {},
+        "dependsOn": [
+          "^typecheck"
+        ],
+        "executor": "nx:run-commands",
+        "inputs": [
+          "production",
+          "^production",
+          {
+            "externalDependencies": [
+              "typescript"
+            ]
+          }
+        ],
+        "metadata": {
+          "description": "Runs type-checking for the project.",
+          "help": {
+            "command": "pnpm exec tsc --build --help",
+            "example": {
+              "args": [
+                "--force"
+              ]
+            }
+          }
+        },
+        "options": {
+          "command": "tsc --build --emitDeclarationOnly",
+          "cwd": "apps/backend"
+        },
+        "outputs": [
+          "{projectRoot}/dist/**/*.d.ts",
+          "{projectRoot}/dist/**/*.d.ts.map",
+          "{projectRoot}/dist/tsconfig.app.tsbuildinfo",
+          "{projectRoot}/out-tsc/vitest/**/*.d.ts",
+          "{projectRoot}/out-tsc/vitest/**/*.d.ts.map",
+          "{projectRoot}/out-tsc/vitest/tsconfig.tsbuildinfo"
+        ],
+        "parallelism": true,
+        "syncGenerators": [
+          "@nx/js:typescript-sync"
+        ]
+      },
+      "watch-deps": {
+        "configurations": {},
+        "continuous": true,
+        "dependsOn": [
+          "build-deps"
+        ],
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "pnpm exec nx watch --projects backend --includeDependentProjects -- pnpm exec nx build-deps backend"
+        },
+        "parallelism": true
+      }
+    }
+  }
+}

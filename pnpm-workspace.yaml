@@ -1,0 +1,14 @@
+packages:
+  - apps/*
+  - libs/*
+  - libs/shared/*
+  - packages/*
+
+onlyBuiltDependencies:
+  - '@nestjs/core'
+  - '@swc/core'
+  - '@tailwindcss/oxide'
+  - better-sqlite3
+  - esbuild
+  - nx
+  - unrs-resolver

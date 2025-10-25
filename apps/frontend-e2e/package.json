@@ -1,0 +1,155 @@
+{
+  "name": "frontend-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "implicitDependencies": [
+      "frontend"
+    ],
+    "targets": {
+      "e2e": {
+        "cache": true,
+        "configurations": {},
+        "dependsOn": [
+          {
+            "projects": [
+              "frontend"
+            ],
+            "target": "preview"
+          }
+        ],
+        "executor": "nx:run-commands",
+        "inputs": [
+          "default",
+          "^production",
+          {
+            "externalDependencies": [
+              "@playwright/test"
+            ]
+          }
+        ],
+        "metadata": {
+          "description": "Runs Playwright Tests",
+          "help": {
+            "command": "pnpm exec playwright test --help",
+            "example": {
+              "options": {
+                "workers": 1
+              }
+            }
+          },
+          "technologies": [
+            "playwright"
+          ]
+        },
+        "options": {
+          "command": "playwright test",
+          "cwd": "apps/frontend-e2e"
+        },
+        "outputs": [
+          "{projectRoot}/test-output/playwright/output",
+          "{projectRoot}/test-output/playwright/report",
+          "{projectRoot}/test-output/playwright/blob-report"
+        ],
+        "parallelism": true
+      },
+      "lint": {
+        "cache": true,
+        "configurations": {},
+        "executor": "nx:run-commands",
+        "inputs": [
+          "default",
+          "^default",
+          "{workspaceRoot}/eslint.config.mjs",
+          "{workspaceRoot}/apps/frontend-e2e/eslint.config.mjs",
+          "{workspaceRoot}/tools/eslint-rules/**/*",
+          {
+            "externalDependencies": [
+              "eslint"
+            ]
+          }
+        ],
+        "metadata": {
+          "description": "Runs ESLint on project",
+          "help": {
+            "command": "pnpm exec eslint --help",
+            "example": {
+              "options": {
+                "max-warnings": 0
+              }
+            }
+          },
+          "technologies": [
+            "eslint"
+          ]
+        },
+        "options": {
+          "command": "eslint .",
+          "cwd": "apps/frontend-e2e",
+          "lintFilePatterns": [
+            "{projectRoot}/**/*.{ts,tsx,js,jsx}",
+            "{projectRoot}/package.json"
+          ]
+        },
+        "outputs": [
+          "{options.outputFile}"
+        ],
+        "parallelism": true
+      },
+      "typecheck": {
+        "cache": true,
+        "configurations": {},
+        "dependsOn": [
+          "^typecheck"
+        ],
+        "executor": "nx:run-commands",
+        "inputs": [
+          "{projectRoot}/package.json",
+          "{workspaceRoot}/tsconfig.base.json",
+          "{projectRoot}/tsconfig.json",
+          "{projectRoot}/**/*.ts",
+          "{projectRoot}/**/*.js",
+          "{projectRoot}/playwright.config.ts",
+          "{projectRoot}/src/**/*.spec.ts",
+          "{projectRoot}/src/**/*.spec.js",
+          "{projectRoot}/src/**/*.test.ts",
+          "{projectRoot}/src/**/*.test.js",
+          "{projectRoot}/src/**/*.d.ts",
+          "!{projectRoot}/out-tsc",
+          "!{projectRoot}/test-output",
+          "!{projectRoot}/eslint.config.js",
+          "!{projectRoot}/eslint.config.mjs",
+          "!{projectRoot}/eslint.config.cjs",
+          "^production"
+        ],
+        "metadata": {
+          "description": "Runs type-checking for the project.",
+          "help": {
+            "command": "pnpm exec tsc --build --help",
+            "example": {
+              "args": [
+                "--force"
+              ]
+            }
+          },
+          "technologies": [
+            "typescript"
+          ]
+        },
+        "options": {
+          "command": "tsc --build --emitDeclarationOnly",
+          "cwd": "apps/frontend-e2e"
+        },
+        "outputs": [
+          "{projectRoot}/out-tsc/playwright/**/*.d.ts",
+          "{projectRoot}/out-tsc/playwright/**/*.d.ts.map",
+          "{projectRoot}/out-tsc/playwright/tsconfig.tsbuildinfo"
+        ],
+        "parallelism": true,
+        "syncGenerators": [
+          "@nx/js:typescript-sync"
+        ]
+      }
+    }
+  }
+}

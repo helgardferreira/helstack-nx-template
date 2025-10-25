@@ -1,0 +1,291 @@
+{
+  "name": "@helstack-nx-template/frontend",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "@helstack-nx-template/actors": "workspace:*",
+    "@helstack-nx-template/schemas": "workspace:*",
+    "@helstack-nx-template/solid-xstate": "workspace:*",
+    "clsx": "*",
+    "d3": "*",
+    "date-fns": "*",
+    "lodash": "*",
+    "lucide-solid": "*",
+    "rxjs": "*",
+    "solid-js": "*",
+    "tailwind-merge": "*",
+    "xstate": "*",
+    "zod": "*"
+  },
+  "nx": {
+    "name": "frontend",
+    "targets": {
+      "build": {
+        "cache": true,
+        "configurations": {},
+        "dependsOn": [
+          "^build"
+        ],
+        "executor": "nx:run-commands",
+        "inputs": [
+          "production",
+          "^production",
+          {
+            "externalDependencies": [
+              "vite"
+            ]
+          }
+        ],
+        "metadata": {
+          "description": "Run Vite build",
+          "help": {
+            "command": "pnpm exec vite build --help",
+            "example": {
+              "options": {
+                "manifest": "manifest.json",
+                "sourcemap": true
+              }
+            }
+          }
+        },
+        "options": {
+          "command": "vite build",
+          "cwd": "apps/frontend"
+        },
+        "outputs": [
+          "{projectRoot}/dist"
+        ],
+        "parallelism": true,
+        "syncGenerators": [
+          "@nx/js:typescript-sync"
+        ]
+      },
+      "build-deps": {
+        "configurations": {},
+        "dependsOn": [
+          "^build"
+        ],
+        "executor": "nx:noop",
+        "options": {},
+        "parallelism": true
+      },
+      "dev": {
+        "configurations": {},
+        "continuous": true,
+        "dependsOn": [
+          "^build",
+          {
+            "projects": [
+              "backend"
+            ],
+            "target": "dev"
+          }
+        ],
+        "executor": "nx:run-commands",
+        "metadata": {
+          "description": "Starts Vite dev server",
+          "help": {
+            "command": "pnpm exec vite --help",
+            "example": {
+              "options": {
+                "port": 3000
+              }
+            }
+          }
+        },
+        "options": {
+          "command": "vite",
+          "cwd": "apps/frontend"
+        },
+        "parallelism": true,
+        "syncGenerators": [
+          "@nx/js:typescript-sync"
+        ]
+      },
+      "lint": {
+        "cache": true,
+        "configurations": {},
+        "executor": "nx:run-commands",
+        "inputs": [
+          "default",
+          "^default",
+          "{workspaceRoot}/eslint.config.mjs",
+          "{workspaceRoot}/apps/frontend/eslint.config.mjs",
+          "{workspaceRoot}/tools/eslint-rules/**/*",
+          {
+            "externalDependencies": [
+              "eslint"
+            ]
+          }
+        ],
+        "metadata": {
+          "description": "Runs ESLint on project",
+          "help": {
+            "command": "pnpm exec eslint --help",
+            "example": {
+              "options": {
+                "max-warnings": 0
+              }
+            }
+          }
+        },
+        "options": {
+          "command": "eslint .",
+          "cwd": "apps/frontend",
+          "lintFilePatterns": [
+            "{projectRoot}/**/*.{ts,tsx,js,jsx}",
+            "{projectRoot}/package.json"
+          ]
+        },
+        "outputs": [
+          "{options.outputFile}"
+        ],
+        "parallelism": true
+      },
+      "preview": {
+        "configurations": {},
+        "continuous": true,
+        "dependsOn": [
+          "build"
+        ],
+        "executor": "nx:run-commands",
+        "metadata": {
+          "description": "Locally preview Vite production build",
+          "help": {
+            "command": "pnpm exec vite preview --help",
+            "example": {
+              "options": {
+                "port": 3000
+              }
+            }
+          }
+        },
+        "options": {
+          "command": "vite preview",
+          "cwd": "apps/frontend"
+        },
+        "parallelism": true
+      },
+      "serve-static": {
+        "configurations": {},
+        "continuous": true,
+        "executor": "@nx/web:file-server",
+        "options": {
+          "buildTarget": "build",
+          "spa": true
+        },
+        "parallelism": true,
+        "syncGenerators": [
+          "@nx/js:typescript-sync"
+        ]
+      },
+      "test": {
+        "cache": true,
+        "configurations": {},
+        "dependsOn": [
+          "^build"
+        ],
+        "executor": "nx:run-commands",
+        "inputs": [
+          "default",
+          "^production",
+          {
+            "externalDependencies": [
+              "vitest"
+            ]
+          },
+          {
+            "env": "CI"
+          }
+        ],
+        "metadata": {
+          "description": "Run Vite tests",
+          "help": {
+            "command": "pnpm exec vitest --help",
+            "example": {
+              "options": {
+                "bail": 1,
+                "coverage": true
+              }
+            }
+          }
+        },
+        "options": {
+          "command": "vitest",
+          "cwd": "apps/frontend"
+        },
+        "outputs": [
+          "{projectRoot}/test-output/vitest/coverage"
+        ],
+        "parallelism": true
+      },
+      "typecheck": {
+        "cache": true,
+        "configurations": {},
+        "dependsOn": [
+          "^typecheck"
+        ],
+        "executor": "nx:run-commands",
+        "inputs": [
+          "production",
+          "^production",
+          {
+            "externalDependencies": [
+              "typescript"
+            ]
+          }
+        ],
+        "metadata": {
+          "description": "Runs type-checking for the project.",
+          "help": {
+            "command": "pnpm exec tsc --build --help",
+            "example": {
+              "args": [
+                "--force"
+              ]
+            }
+          }
+        },
+        "options": {
+          "command": "tsc --build --emitDeclarationOnly",
+          "cwd": "apps/frontend"
+        },
+        "outputs": [
+          "{projectRoot}/**/*.js",
+          "{projectRoot}/**/*.cjs",
+          "{projectRoot}/**/*.mjs",
+          "{projectRoot}/**/*.jsx",
+          "{projectRoot}/**/*.js.map",
+          "{projectRoot}/**/*.jsx.map",
+          "{projectRoot}/**/*.d.ts",
+          "{projectRoot}/**/*.d.cts",
+          "{projectRoot}/**/*.d.mts",
+          "{projectRoot}/**/*.d.ts.map",
+          "{projectRoot}/**/*.d.cts.map",
+          "{projectRoot}/**/*.d.mts.map",
+          "{projectRoot}/tsconfig.tsbuildinfo",
+          "{projectRoot}/dist/**/*.d.ts",
+          "{projectRoot}/dist/tsconfig.app.tsbuildinfo",
+          "{projectRoot}/out-tsc/vitest/**/*.d.ts",
+          "{projectRoot}/out-tsc/vitest/tsconfig.tsbuildinfo"
+        ],
+        "parallelism": true,
+        "syncGenerators": [
+          "@nx/js:typescript-sync"
+        ]
+      },
+      "watch-deps": {
+        "configurations": {},
+        "continuous": true,
+        "dependsOn": [
+          "build-deps"
+        ],
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "pnpm exec nx watch --projects frontend --includeDependentProjects -- pnpm exec nx build-deps frontend"
+        },
+        "parallelism": true
+      }
+    }
+  }
+}
