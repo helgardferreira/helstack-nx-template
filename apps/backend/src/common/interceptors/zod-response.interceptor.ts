@@ -4,12 +4,16 @@ import {
   ExecutionContext,
   Injectable,
   InternalServerErrorException,
+  Logger,
   NestInterceptor,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ZodType } from 'zod';
+import type { ZodType } from 'zod';
 
+// TODO: implement `ZodWsResponse`
+// TODO: rename this to `ZodHttpResponse`
+// TODO: continue here...
 @Injectable()
 export class ZodResponseInterceptor<T> implements NestInterceptor {
   constructor(private readonly schema: ZodType<T>) {}
@@ -22,7 +26,7 @@ export class ZodResponseInterceptor<T> implements NestInterceptor {
             ? this.schema.array().encode(value)
             : this.schema.encode(value);
         } catch (err) {
-          console.log(err);
+          Logger.error(err);
 
           throw new InternalServerErrorException(
             'Internal response did not match the contract.'

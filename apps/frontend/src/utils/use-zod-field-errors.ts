@@ -1,5 +1,5 @@
 import { type Accessor, createMemo } from 'solid-js';
-import { z } from 'zod';
+import * as z from 'zod';
 
 type FieldErrors<T> = {
   [P in keyof T]?: string[];

@@ -1,5 +1,5 @@
 import type { ActorRef, Snapshot } from 'xstate';
-import type { z } from 'zod';
+import type { ZodError } from 'zod';
 
 import type {
   CreateTodo,
@@ -14,9 +14,9 @@ type ParentActor = ActorRef<
 
 type TodoActorContext = Omit<Todo, 'createdAt' | 'id' | 'updatedAt'> &
   Partial<Pick<Todo, 'createdAt' | 'id' | 'updatedAt'>> & {
-    createTodoError?: z.ZodError<CreateTodo>;
+    createTodoError?: ZodError<CreateTodo>;
     parentActor: ParentActor;
-    updateTodoError?: z.ZodError<UpdateTodo>;
+    updateTodoError?: ZodError<UpdateTodo>;
   };
 
 type TodoActorInput = {

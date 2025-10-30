@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod';
 
 import { epochMillisToDate } from '../utils/codecs/index.js';
 

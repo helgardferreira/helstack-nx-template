@@ -1,9 +1,10 @@
 declare type TokenPayload = {
-  aud?: string | string[];
-  azp?: string;
-  exp?: number;
-  iat?: number;
-  iss?: string;
-  scope?: string;
+  exp: number;
+  iat: number;
   sub: string;
+  user: {
+    createdAt: number;
+    updatedAt: number;
+    username: string;
+  };
 };

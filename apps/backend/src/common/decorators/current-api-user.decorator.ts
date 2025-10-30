@@ -5,7 +5,7 @@ export const CurrentApiUser = createParamDecorator(
   (
     _data: unknown,
     executionContext: ExecutionContext
-  ): UserSession | undefined => {
+  ): Record<string, unknown> | undefined => {
     const request = executionContext.switchToHttp().getRequest<Request>();
 
     return request.user;

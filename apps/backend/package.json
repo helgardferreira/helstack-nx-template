@@ -13,10 +13,13 @@
     "@nestjs/common": "*",
     "@nestjs/config": "*",
     "@nestjs/core": "*",
+    "@nestjs/platform-ws": "*",
+    "@nestjs/websockets": "*",
     "express": "*",
     "lodash": "*",
     "rxjs": "*",
     "uuid": "*",
+    "ws": "*",
     "zod": "*"
   },
   "nx": {

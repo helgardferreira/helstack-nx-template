@@ -6,7 +6,7 @@ import {
   sendTo,
   setup,
 } from 'xstate';
-import { z } from 'zod';
+import * as z from 'zod';
 
 import type {
   CreateTodo,

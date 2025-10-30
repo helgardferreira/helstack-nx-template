@@ -1,7 +1,7 @@
 import { Entity, Opt, PrimaryKey, Property } from '@mikro-orm/better-sqlite';
 import { v4 } from 'uuid';
 
-import type { CreateTodo, Todo } from '@helstack-nx-template/schemas';
+import type { Todo } from '@helstack-nx-template/schemas';
 
 @Entity({ tableName: 'todo' })
 export class TodoEntity implements Todo {
@@ -17,15 +17,13 @@ export class TodoEntity implements Todo {
   @Property()
   title: string;
 
-  @Property()
+  @Property({ type: 'datetime' })
   createdAt: Date & Opt = new Date();
 
-  @Property({ onUpdate: () => new Date().getTime() })
+  @Property({ onUpdate: () => new Date(), type: 'datetime' })
   updatedAt: Date & Opt = new Date();
 
-  constructor(data: CreateTodo) {
-    const { description, title } = data;
-
+  constructor(description: string | undefined, title: string) {
     this.description = description ?? null;
     this.title = title;
   }

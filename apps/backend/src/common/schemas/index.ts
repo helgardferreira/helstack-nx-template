@@ -1,2 +1,2 @@
 export * from './config.schema';
-export * from './persistence.schema';
+export * from './persistence-config.schema';
