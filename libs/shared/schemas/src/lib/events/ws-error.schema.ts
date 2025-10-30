@@ -1,8 +1,7 @@
 import * as z from 'zod';
 
-// TODO: try to implement this in gateway
 export const WsErrorSchema = z.object({
-  code: z.string().min(1), // e.g. 'VALIDATION', 'NOT_FOUND', etc.
+  code: z.string().min(1),
   message: z.string().min(1),
 });
 

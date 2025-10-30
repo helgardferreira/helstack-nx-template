@@ -2,10 +2,10 @@
 import { ArgumentsHost, Catch } from '@nestjs/common';
 import { BaseWsExceptionFilter } from '@nestjs/websockets';
 import type { WebSocket } from 'ws';
+import * as z from 'zod';
 
 import {
-  type ServerError,
-  ServerErrorSchema,
+  ServerMessageSchema,
   WsErrorSchema,
 } from '@helstack-nx-template/schemas';
 
@@ -13,17 +13,17 @@ import {
 export class WsExceptionFilter extends BaseWsExceptionFilter {
   override catch(exception: any, host: ArgumentsHost) {
     const client = host.switchToWs().getClient<WebSocket>();
-
-    let response: ServerError;
+    let response: z.input<typeof ServerMessageSchema>;
 
     try {
-      response = ServerErrorSchema.encode({
-        type: 'error',
+      response = ServerMessageSchema.encode({
+        meta: { ts: new Date() },
+        type: 'ERROR',
         error: WsErrorSchema.parse(exception.getError()),
       });
     } catch {
       response = {
-        type: 'error',
+        type: 'ERROR',
         error: {
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Internal Server Error',

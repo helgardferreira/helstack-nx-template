@@ -19,7 +19,7 @@ import {
   UpdateTodoSchema,
 } from '@helstack-nx-template/schemas';
 
-import { ZodResponseInterceptor } from '../common/interceptors';
+import { ZodHttpInterceptor } from '../common/interceptors';
 import { ZodHttpPipe } from '../common/pipes';
 
 import { TodosService } from './todos.service';
@@ -29,7 +29,7 @@ export class TodosController {
   constructor(private readonly todosService: TodosService) {}
 
   @Post()
-  @UseInterceptors(new ZodResponseInterceptor(TodoSchema))
+  @UseInterceptors(new ZodHttpInterceptor(TodoSchema))
   createTodo(
     @Body(new ZodHttpPipe(CreateTodoSchema)) body: CreateTodo
   ): Promise<Todo> {
@@ -37,13 +37,13 @@ export class TodosController {
   }
 
   @Get()
-  @UseInterceptors(new ZodResponseInterceptor(TodoSchema))
+  @UseInterceptors(new ZodHttpInterceptor(TodoSchema))
   findAllTodos(): Promise<Todo[]> {
     return this.todosService.findAll();
   }
 
   @Get(':id')
-  @UseInterceptors(new ZodResponseInterceptor(TodoSchema))
+  @UseInterceptors(new ZodHttpInterceptor(TodoSchema))
   findTodoById(
     @Param('id', new ZodHttpPipe(z.uuid())) id: string
   ): Promise<Todo> {
@@ -51,7 +51,7 @@ export class TodosController {
   }
 
   @Patch(':id')
-  @UseInterceptors(new ZodResponseInterceptor(TodoSchema))
+  @UseInterceptors(new ZodHttpInterceptor(TodoSchema))
   updateTodoById(
     @Param('id', new ZodHttpPipe(z.uuid())) id: string,
     @Body(new ZodHttpPipe(UpdateTodoSchema)) body: UpdateTodo

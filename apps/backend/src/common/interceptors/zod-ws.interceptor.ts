@@ -3,19 +3,18 @@ import {
   CallHandler,
   ExecutionContext,
   Injectable,
-  InternalServerErrorException,
   Logger,
   NestInterceptor,
 } from '@nestjs/common';
+import { WsException } from '@nestjs/websockets';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import type { ZodType } from 'zod';
 
-// TODO: implement `ZodWsResponse`
-// TODO: rename this to `ZodHttpResponse`
-// TODO: continue here...
+import { WsErrorSchema } from '@helstack-nx-template/schemas';
+
 @Injectable()
-export class ZodResponseInterceptor<T> implements NestInterceptor {
+export class ZodWsInterceptor<T> implements NestInterceptor {
   constructor(private readonly schema: ZodType<T>) {}
 
   intercept(_ctx: ExecutionContext, next: CallHandler): Observable<any> {
@@ -28,8 +27,11 @@ export class ZodResponseInterceptor<T> implements NestInterceptor {
         } catch (err) {
           Logger.error(err);
 
-          throw new InternalServerErrorException(
-            'Internal response did not match the contract.'
+          throw new WsException(
+            WsErrorSchema.encode({
+              code: 'INTERNAL_SERVER_ERROR',
+              message: 'Internal response did not match the contract.',
+            })
           );
         }
       })

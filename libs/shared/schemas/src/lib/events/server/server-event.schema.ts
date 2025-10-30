@@ -8,41 +8,36 @@ import { epochMillisToDate } from '../../utils/codecs/index.js';
 import { EnvelopeMetaSchema } from '../envelope-meta.schema.js';
 import { WsErrorSchema } from '../ws-error.schema.js';
 
-// TODO: use this in return statement for `@SubscribeMessage` in `EventsGateway`
 const ServerAckSchema = z.object({
-  type: z.literal('ack'),
-  id: z.uuid(),
-  corr: z.string().min(6).max(100).optional(),
+  type: z.literal('ACK'),
+  id: z.uuid().optional(),
   ok: z.literal(true),
 });
 
 const ServerErrorSchema = z.object({
-  type: z.literal('error'),
+  type: z.literal('ERROR'),
   error: WsErrorSchema,
-  // TODO: maybe remove this?
-  // corr: z.string().min(6).max(100).optional(),
 });
 
 const ServerTodosCreatedSchema = z.object({
-  type: z.literal('todos.created'),
+  type: z.literal('TODOS.CREATED'),
   item: TodoSchema,
 });
 
 const ServerTodosDeletedSchema = z.object({
-  type: z.literal('todos.deleted'),
+  type: z.literal('TODOS.DELETED'),
   id: z.uuid(),
 });
 
 const ServerTodosPatchedSchema = z.object({
-  type: z.literal('todos.patched'),
+  type: z.literal('TODOS.PATCHED'),
   id: z.uuid(),
   changes: UpdateTodoSchema,
   updatedAt: epochMillisToDate,
 });
 
-// TODO: implement this as initial state when (re)subscribing
 const ServerTodosSnapshotSchema = z.object({
-  type: z.literal('todos.snapshot'),
+  type: z.literal('TODOS.SNAPSHOT'),
   items: z.array(TodoSchema),
 });
 

@@ -7,34 +7,31 @@ import { CreateTodoSchema, UpdateTodoSchema } from '../../todos/todo.schema.js';
 import { EnvelopeMetaSchema } from '../envelope-meta.schema.js';
 
 const ClientTodosCreateSchema = z.object({
-  type: z.literal('todos.create'),
+  type: z.literal('TODOS.CREATE'),
   payload: CreateTodoSchema,
 });
 
-// TODO: implement this first since it's the simplest
 const ClientTodosDeleteSchema = z.object({
-  type: z.literal('todos.delete'),
+  type: z.literal('TODOS.DELETE'),
   id: z.uuid(),
 });
 
 const ClientTodosSubscribeSchema = z.object({
-  type: z.literal('todos.subscribe'),
+  type: z.literal('TODOS.SUBSCRIBE'),
 });
 
-// TODO: remove this after implementing `ClientTodosUpdateSchema`
-// TODO: implement this after `todos.delete`
 const ClientTodosToggleSchema = z.object({
-  type: z.literal('todos.toggle'),
+  type: z.literal('TODOS.TOGGLE'),
   id: z.uuid(),
   completed: z.boolean(),
 });
 
 const ClientTodosUnsubscribeSchema = z.object({
-  type: z.literal('todos.unsubscribe'),
+  type: z.literal('TODOS.UNSUBSCRIBE'),
 });
 
 const ClientTodosUpdateSchema = z.object({
-  type: z.literal('todos.update'),
+  type: z.literal('TODOS.UPDATE'),
   id: z.uuid(),
   patch: UpdateTodoSchema,
 });
